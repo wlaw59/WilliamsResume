@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    {% load static %}
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='{% static "style.css" %}'>
+
+</head>
+
+<body>
+    {% if book.upload_by.id == request.session.login_id %} 
+    <form action="/bookEdit/{{book.id}}" method="post">
+        {% csrf_token %}
+        <h1>Tile: <input placeholder="{{book.title}}" name="title" type="text"></h1>
+        <p>Added by:{{book.upload_by.fname}} {{book.upload_by.lname}}</p>
+        <p>Added on:{{book.created_at}}</p>
+        <p>Updated on:{{book.updated_at}}</p>
+        <p>Description: <input placeholder="{{book.desc}}" name="desc" type="text"></p>
+        <button type="submit">EDIT</button>
+    </form>
+    <a href="/delete/{{book.id}}"><button>Delete</button></a>
+        {%else%}
+
+        <h1>Tile: {{book.title}}</h1>
+        <p>Added by:{{book.upload_by.fname}} {{book.upload_by.lname}}</p>
+        <p>Added on:{{book.created_at}}</p>
+        <p>Updated on:{{book.updated_at}}</p>
+        <p>Description:{{book.desc}}</p>
+    
+    <a href="/add_to_fav/{{book.id}}">add book to favorite</a>
+    {%endif%}
+
+        <h2>Users who like this book</h2>
+    {% for user in book.users_who_like.all %}
+
+    
+        <p>(Favorited by {{user.fname}} {{user.lname}})
+        {% if user.id == request.session.login_id %} 
+            <a href="/removeFav/{{book.id}}">Un-favorite</a>
+        
+        {%else%}
+
+    
+    
+    {%endif%}
+        </p>
+    {%endfor%}
+
+
+  
+</body>
+
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    {% load static %}
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='{% static "style.css" %}'>
+
+</head>
+
+<body>
+
+
+    {% for book in all_books %}
+
+    <a href="/books/{{book.id}}"> {{book.title}}</a>
+    <p>(added by {{book.upload_by.fname}} {{book.upload_by.lname}})</p>
+    {% if user in book.users_who_like.all %}
+    <p>this is one of your favorites</p>
+    {%else%}
+
+    
+    <a href="/add_to_fav/{{book.id}}">add book to favorite</a>
+    {%endif%}
+    {%endfor%}
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <p>test</p>
+    <form action="/new_book" method="post">
+        {% csrf_token %}
+        <p>Tile: <input name="title" type="text"></p>
+        <p>Description: <input name="desc" type="text"></p>
+        <button type="submit">ADD</button>
+    </form>
+    <a href="/logout"> logout</a>
+</body>
+
+</html>
